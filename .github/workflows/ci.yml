@@ -12,7 +12,7 @@ jobs:
 
     env:
       Solution_Name: DesignPatterns\DesignPatterns.sln
-      Test_Project_Path: Tests\Tests.csproj
+      Test_Project_Path: Tests
 
     steps:
     - name: Checkout repository
