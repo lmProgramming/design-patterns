@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -71,11 +72,15 @@ public class UiText : Observer
 
     public void Update()
     {
+        var culture = new CultureInfo("pl-PL");
+        string formattedPrice = priceModel.Price.ToString("F2", culture);
+
         var endChar = priceModel.Severity switch
         {
             TextSeverity.Important => '!',
             _ => '.',
         };
-        text = $"Price is: {priceModel.Price}{priceModel.CurrencySymbol}{endChar}";
+
+        text = $"Price is: {formattedPrice}{priceModel.CurrencySymbol}{endChar}";
     }
 }
