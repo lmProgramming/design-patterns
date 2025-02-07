@@ -26,4 +26,4 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Execute unit tests
-      run: dotnet test $env:Test_Project_Path
+      run: dotnet test ${{ env.Test_Project_Path }}
