@@ -13,7 +13,7 @@ public interface Observer
 
 public abstract class Subject
 {
-    List<Observer> observers;
+    List<Observer> observers = new List<Observer>();
 
     public void Attach(Observer observer)
     {
@@ -36,15 +36,15 @@ public abstract class Subject
 
 public enum TextSeverity
 {
-    Warning,
+    Important,
     Information,
 }
 
 public class PriceModel : Subject
 {
-    public TextSeverity Severity { get; private set; }
-    public string CurrencySymbol { get; private set; }
-    public float Price { get; private set; }
+    public TextSeverity Severity { get; set; }
+    public string CurrencySymbol { get; set; }
+    public float Price { get; set; }
 
     public PriceModel(TextSeverity _severity, string _currencySymbol, float _price)
     {
@@ -73,7 +73,7 @@ public class UiText : Observer
     {
         var endChar = priceModel.Severity switch
         {
-            TextSeverity.Warning => '!',
+            TextSeverity.Important => '!',
             _ => '.',
         };
         text = $"Price is: {priceModel.Price}{priceModel.CurrencySymbol}{endChar}";
