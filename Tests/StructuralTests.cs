@@ -42,4 +42,18 @@ public class StructuralTests
         Assert.Equal(4.5m, account1.Balance);
         Assert.Equal(295.5m, account2.Balance);
     }
+
+    [Fact]
+    public void FacadeTests()
+    {
+        Assert.False(PasswordVerifier.IsPasswordValid("password"));
+        
+        Assert.False(PasswordVerifier.IsPasswordValid("password123@"));
+        
+        Assert.False(PasswordVerifier.IsPasswordValid("461274127#@!&^#!"));
+        
+        Assert.False(PasswordVerifier.IsPasswordValid("aA1@"));
+        
+        Assert.True(PasswordVerifier.IsPasswordValid("Pa$$w0rd123"));
+    }
 }
