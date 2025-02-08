@@ -31,4 +31,18 @@ public class CreationTests
         Assert.Equal("My text is: HELLO", a.Hello());
         Assert.Equal(-10, b.MyNumber());
     }
+
+    [Fact]
+    public void FactoryTests()
+    {
+        var ant1 = AntFactory.CreateAnt(AntType.Worker);
+        var ant2 = AntFactory.CreateAnt(AntType.Soldier);
+        var ant3 = AntFactory.CreateAnt(AntType.Queen);
+        
+        Assert.Equal("Worker Ant: Collecting food.", ant1.Act());
+        
+        Assert.Equal("Soldier Ant: Defending the colony.", ant2.Act());
+        
+        Assert.Equal("Queen Ant: Laying eggs.", ant3.Act());
+    }
 }
