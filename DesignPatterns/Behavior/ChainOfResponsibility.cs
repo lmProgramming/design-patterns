@@ -1,33 +1,73 @@
 ﻿namespace DesignPatterns.Behavior;
 
-public static class PasswordLengthChecker
+public abstract class PasswordValidator
 {
-    public static bool IsLengthValid(string password)
+    private PasswordValidator? _next;
+
+    public PasswordValidator SetNext(PasswordValidator nextValidator)
     {
-        return password.Length is >= 6 and <= 20;
+        _next = nextValidator;
+        return nextValidator;
+    }
+
+    public virtual bool Handle(string password)
+    {
+        return _next == null || _next.Handle(password);
     }
 }
 
-public static class PasswordCharacterChecker
+public class PasswordLengthValidator : PasswordValidator
 {
-    public static bool HasSpecialCharacter(string password)
+    public override bool Handle(string password)
     {
-        return !password.All(char.IsLetterOrDigit);
+        if (password.Length is >= 6 and <= 20) return base.Handle(password);
+        
+        Console.WriteLine("Password length must be between 6 and 20 characters.");
+        return false;
     }
-    
-    public static bool HasLowerCaseCharacter(string password)
+}
+
+public class PasswordSpecialCharacterValidator : PasswordValidator
+{
+    public override bool Handle(string password)
     {
-        return password.Any(char.IsLower);
+        if (!password.All(char.IsLetterOrDigit)) return base.Handle(password);
+        
+        Console.WriteLine("Password must contain at least one special character.");
+        return false;
     }
-    
-    public static bool HasUpperCaseCharacter(string password)
+}
+
+public class PasswordLowerCaseValidator : PasswordValidator
+{
+    public override bool Handle(string password)
     {
-        return password.Any(char.IsUpper);
+        if (password.Any(char.IsLower)) return base.Handle(password);
+        
+        Console.WriteLine("Password must contain at least one lowercase letter.");
+        return false;
     }
-    
-    public static bool HasDigitCharacter(string password)
+}
+
+public class PasswordUpperCaseValidator : PasswordValidator
+{
+    public override bool Handle(string password)
     {
-        return password.Any(char.IsDigit);
+        if (password.Any(char.IsUpper)) return base.Handle(password);
+        
+        Console.WriteLine("Password must contain at least one uppercase letter.");
+        return false;
+    }
+}
+
+public class PasswordDigitValidator : PasswordValidator
+{
+    public override bool Handle(string password)
+    {
+        if (password.Any(char.IsDigit)) return base.Handle(password);
+        
+        Console.WriteLine("Password must contain at least one digit.");
+        return false;
     }
 }
 
@@ -35,31 +75,13 @@ public static class PasswordVerifier
 {
     public static bool IsPasswordValid(string password)
     {
-        if (!PasswordLengthChecker.IsLengthValid(password))
-        {
-            return false;
-        }
+        var validatorChain = new PasswordLengthValidator();
+        validatorChain
+            .SetNext(new PasswordSpecialCharacterValidator())
+            .SetNext(new PasswordLowerCaseValidator())
+            .SetNext(new PasswordUpperCaseValidator())
+            .SetNext(new PasswordDigitValidator());
 
-        if (!PasswordCharacterChecker.HasSpecialCharacter(password))
-        {
-            return false;
-        }
-
-        if (!PasswordCharacterChecker.HasLowerCaseCharacter(password))
-        {
-            return false;
-        }
-
-        if (!PasswordCharacterChecker.HasUpperCaseCharacter(password))
-        {
-            return false;
-        }
-
-        if (!PasswordCharacterChecker.HasDigitCharacter(password))
-        {
-            return false;
-        }
-        
-        return true;    
+        return validatorChain.Handle(password);
     }
 }
