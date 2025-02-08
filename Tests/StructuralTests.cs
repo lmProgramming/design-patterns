@@ -20,4 +20,26 @@ public class StructuralTests
         
         Assert.Equal("Yep, that's me: Mikołaj Kubś, Pwr", decoratedB.Operation());
     }
+
+    [Fact]
+    public void AdapterTests()
+    {
+        var accountDao = new AccountDao();
+        accountDao.CreateBaseData();
+        
+        var oldPaymentSystem = new OldPaymentSystemImplementation();
+        
+        var newPaymentSystem = new NewPaymentSystemAdapter(oldPaymentSystem);
+        
+        var account1 = accountDao.GetAccount(1)!;
+        var account2 = accountDao.GetAccount(2)!;
+
+        Assert.Equal(100, account1.Balance);
+        Assert.Equal(200, account2.Balance);
+        
+        newPaymentSystem.TransferMoney(account1, account2, 95.5m);
+        
+        Assert.Equal(4.5m, account1.Balance);
+        Assert.Equal(295.5m, account2.Balance);
+    }
 }
