@@ -1,4 +1,4 @@
-![Automated tests](https://github.com/lmProgramming/design-patterns/actions/workflows/ci.yml/badge.svg)
+[![CI](https://github.com/lmProgramming/design-patterns/actions/workflows/ci.yml/badge.svg)](https://github.com/lmProgramming/design-patterns/actions/workflows/ci.yml)
 
 # Design Patterns in C#
 
